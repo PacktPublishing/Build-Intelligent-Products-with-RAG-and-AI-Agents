@@ -1,0 +1,15 @@
+.venv/
+venv/
+.env
+.env.*
+**/.streamlit/secrets.toml
+**/data/*.csv
+__pycache__/
+.pytest_cache/
+*.pyc
+.DS_Store
+.coverage
+htmlcov/
+
+# smoke test outputs (real API responses, never committed)
+**/smoke-tests/results/
