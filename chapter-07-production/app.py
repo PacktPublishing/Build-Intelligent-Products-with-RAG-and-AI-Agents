@@ -84,7 +84,7 @@ openai_client = _openai_client()
 # ---- Node 1: LANDING ----
 st.title("ResumeRoast 🔥")
 st.subheader(
-    "Find out exactly what a recruiter thinks of your resume — "
+    "Find out exactly what a recruiter thinks of your resume - "
     "before you send it. Brutal, specific, instant."
 )
 
