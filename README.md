@@ -7,13 +7,12 @@ This is the official companion code repository for *Build Intelligent Products w
 | Chapter | Product version | What changes | Code |
 |---|---|---|---|
 | Chapter 4 | ResumeRoast v1 | LLM wrapper, Streamlit, PDF ingestion, CSV storage | [chapter-04-mvp](chapter-04-mvp/) |
-| Chapter 5 | ResumeRoast v2 | Capped agent loop and read-only job-context tools | [chapter-05-agents](chapter-05-agents/) |
-| Chapter 5 | ResumeRoast v3 | Grounding with RAG | `chapter-05-rag` |
-| Chapter 6 | ResumeRoast v4 | Adding the agent layer | `chapter-06-agents` |
-| Chapter 7 | ResumeRoast v5 | Production infrastructure | `chapter-07-production` |
-| Chapter 8 | ResumeRoast v6 | First-user and distribution support | Coming later |
-| Chapter 8 | ResumeRoast v5 | Evaluation and iteration | Coming later |
-| Chapter 9 | ResumeRoast v6 | Scaling into a real product | Coming later |
+| Chapter 5 | ResumeRoast v2 | Grounding with RAG | [chapter-05-rag](chapter-05-rag/) |
+| Chapter 6 | ResumeRoast v3 | Adding the agent layer | [chapter-06-agents](chapter-06-agents/) |
+| Chapter 7 | ResumeRoast v4 | Production infrastructure | [chapter-07-production](chapter-07-production/) |
+| Chapter 8 | ResumeRoast v5 | First-user and distribution support | Coming later |
+| Chapter 9 | ResumeRoast v6 | Evaluation and iteration | Coming later |
+| Chapter 10 | ResumeRoast v7 | Scaling into a real product | Coming later |
 
 ## How the repository is organised
 
@@ -22,7 +21,7 @@ Every chapter folder (`chapter-NN-name/`) is a complete, runnable snapshot of Re
 ## Start here
 
 - **Reading Chapter 4 right now:** open [chapter-04-mvp](chapter-04-mvp/) and follow its README.
-- **Reading Chapter 5 right now:** open [chapter-05-agents](chapter-05-agents/), read "What changed from Chapter 4?", then run its no-cost verification commands.
+- **Reading Chapter 5 right now:** open [chapter-05-rag](chapter-05-rag/) and follow its README.
 - **Following the book from the beginning:** work through Chapters 1–3 first (design and validation, no code yet), then come back here when the build begins.
 - **Joining in a later chapter:** open that chapter's folder, read its README, and check its "What changed from the previous chapter" section before touching code.
 
