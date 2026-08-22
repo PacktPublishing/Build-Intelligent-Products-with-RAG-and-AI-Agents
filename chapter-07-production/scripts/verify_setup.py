@@ -156,14 +156,17 @@ def check_agent_contract() -> None:
     )
 
 
-def load_local_secrets() -> dict[str, object]:
+def load_local_secrets(*, required: bool = True) -> dict[str, object]:
     secret_path = CHAPTER_ROOT / ".streamlit" / "secrets.toml"
     if not secret_path.exists():
-        check(
-            "local Streamlit secret exists",
-            False,
-            "copy secrets.example.toml to secrets.toml",
-        )
+        if required:
+            check(
+                "local Streamlit secret exists",
+                False,
+                "copy secrets.example.toml to secrets.toml",
+            )
+        else:
+            print("[SKIP] local Streamlit secret check -- CI must not contain deployment secrets")
         return {}
 
     check("local Streamlit secret exists", True)
@@ -192,7 +195,11 @@ def configured_secret(value: object) -> bool:
     return len(cleaned) >= 20 and cleaned not in placeholders
 
 
-def check_secrets(values: dict[str, object]) -> None:
+def check_secrets(values: dict[str, object], *, required: bool = True) -> None:
+    if not required:
+        print("[SKIP] deployment secret values -- CI verifies that secrets are ignored, not present")
+        return
+
     openai_key = values.get("OPENAI_API_KEY", "")
     supabase_url = values.get("SUPABASE_URL", "")
     supabase_key = values.get("SUPABASE_KEY", "")
@@ -355,6 +362,11 @@ def main() -> int:
         action="store_true",
         help="make one minimal billed OpenAI call",
     )
+    parser.add_argument(
+        "--ci",
+        action="store_true",
+        help="run repository-safe checks without requiring local deployment secrets",
+    )
     args = parser.parse_args()
 
     check_python_version()
@@ -364,8 +376,8 @@ def main() -> int:
     check_application_modules()
     check_agent_contract()
 
-    secrets = load_local_secrets()
-    check_secrets(secrets)
+    secrets = load_local_secrets(required=not args.ci)
+    check_secrets(secrets, required=not args.ci)
     check_ignore_rules()
     check_secret_leaks(secrets)
     check_deployment_files()
