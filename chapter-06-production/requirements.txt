@@ -1,0 +1,11 @@
+# Pinned to the environment this chapter was tested against, so a fresh
+# clone reproduces the same behaviour the manuscript describes. Newer
+# compatible versions are very likely fine -- check each package's
+# changelog if you bump a version, especially openai (the Responses API
+# surface can change between releases).
+streamlit==1.60.0
+openai==2.48.0
+pypdf==6.14.2
+requests==2.32.5
+beautifulsoup4==4.14.3
+supabase==2.31.0
