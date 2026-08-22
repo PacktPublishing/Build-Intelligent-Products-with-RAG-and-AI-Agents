@@ -200,6 +200,7 @@ def configured_secret(value: object) -> bool:
     placeholders = {
         "replace-with-your-key",
         "replace-with-your-publishable-key",
+        "replace-with-your-supabase-publishable-key",
         "your_api_key_here",
         "your-supabase-key",
     }
