@@ -14,6 +14,7 @@ from pathlib import Path
 # correct values. Changing a model tier is a one-line edit here.
 ROAST_MODEL = "gpt-5"  # frontier tier: the roast itself
 CHECK_MODEL = "gpt-5-mini"  # budget tier: input checking
+EMBEDDING_MODEL = "text-embedding-3-small"
 
 # ROAST_MODEL is a reasoning model: it spends part of MAX_OUTPUT_TOKENS on
 # hidden reasoning before writing the visible critique. Left at the
@@ -38,9 +39,13 @@ MAX_OUTPUT_TOKENS = 1600  # hard cap on what the model sends back
 # unlimited network request.
 MAX_AGENT_STEPS = 3
 MAX_INTENT_CHARS = 1000
+MAX_RETRIEVED_CHUNKS = 3
+MAX_EVIDENCE_CHARS = 4_500
+MIN_RETRIEVAL_SCORE = 0.35
 TOOL_TIMEOUT_SECONDS = 10
 MAX_TOOL_REDIRECTS = 3
 
 DATA_DIR = Path("data")
+CORPUS_PATH = DATA_DIR / "rubrics.json"
 
-PROMPT_VERSION = "v2-agent.2"
+PROMPT_VERSION = "v3-rag-agent-production"

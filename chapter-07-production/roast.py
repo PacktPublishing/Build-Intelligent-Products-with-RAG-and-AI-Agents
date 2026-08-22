@@ -9,6 +9,7 @@ from __future__ import annotations
 import json
 import re
 from collections.abc import Callable, Mapping
+from dataclasses import dataclass
 from typing import Any
 
 from openai import OpenAI, OpenAIError
@@ -21,6 +22,7 @@ from config import (
     ROAST_REASONING_EFFORT,
 )
 from prompts import AGENT_SYSTEM_PROMPT
+from retrieval import EmbeddedCorpus, RetrievedChunk, RetrievalError, format_evidence, retrieve_rubrics
 from tool_schemas import AGENT_TOOLS
 from tools import TOOL_HANDLERS
 
@@ -39,6 +41,13 @@ _SCORE_LINE = re.compile(r"^SCORE:\s*(\d{1,2})\s*/\s*10\s*$")
 
 class RoastError(Exception):
     """Raised with a user-facing message when the model API cannot be used."""
+
+
+@dataclass(frozen=True)
+class AgentRoast:
+    text: str
+    evidence: list[RetrievedChunk]
+    trace: list[dict[str, Any]]
 
 
 def create_client(api_key: str) -> OpenAI:
@@ -90,6 +99,7 @@ def run_agentic_roast(
     resume_text: str,
     user_intent: str,
     *,
+    evidence_text: str = "",
     max_steps: int = MAX_AGENT_STEPS,
     tool_handlers: Mapping[str, Callable[..., str]] | None = None,
     trace: list[dict[str, Any]] | None = None,
@@ -107,7 +117,11 @@ def run_agentic_roast(
     input_items: list[Any] = [
         {
             "role": "user",
-            "content": f"RESUME:\n{resume_text}\n\nUSER INTENT:\n{user_intent}",
+            "content": (
+                f"USER INTENT:\n{user_intent}\n\n"
+                f"RETRIEVED RUBRIC EVIDENCE:\n{evidence_text}\n\n"
+                f"RESUME:\n{resume_text}"
+            ),
         }
     ]
 
@@ -180,6 +194,31 @@ def run_agentic_roast(
     _record_event(trace, {"step": max_steps, "type": "limit_reached"})
     print(f"[agent] stopped after hard cap of {max_steps} model steps")
     return AGENT_LIMIT_MESSAGE
+
+
+def roast_resume(
+    client: OpenAI,
+    resume_text: str,
+    user_intent: str,
+    index: EmbeddedCorpus,
+    *,
+    tool_handlers: Mapping[str, Callable[..., str]] | None = None,
+) -> AgentRoast:
+    """Retrieve curated evidence before the bounded public-tool loop."""
+    try:
+        evidence = retrieve_rubrics(client, user_intent, index)
+    except RetrievalError as exc:
+        raise RoastError(str(exc)) from exc
+    trace: list[dict[str, Any]] = []
+    text = run_agentic_roast(
+        client,
+        resume_text,
+        user_intent,
+        evidence_text=format_evidence(evidence),
+        tool_handlers=tool_handlers,
+        trace=trace,
+    )
+    return AgentRoast(text=text, evidence=evidence, trace=trace)
 
 
 def parse_score(roast_text: str) -> str:

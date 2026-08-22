@@ -100,6 +100,8 @@ def check_config() -> None:
         "MAX_OUTPUT_TOKENS",
         "MAX_AGENT_STEPS",
         "MAX_INTENT_CHARS",
+        "MAX_RETRIEVED_CHUNKS",
+        "MAX_EVIDENCE_CHARS",
         "TOOL_TIMEOUT_SECONDS",
         "MAX_TOOL_REDIRECTS",
     ]
@@ -118,13 +120,13 @@ def check_config() -> None:
         f"{config.MIN_CHARS} < {config.MAX_CHARS}",
     )
 
-    for name in ["ROAST_MODEL", "CHECK_MODEL", "PROMPT_VERSION"]:
+    for name in ["ROAST_MODEL", "CHECK_MODEL", "EMBEDDING_MODEL", "PROMPT_VERSION"]:
         value = getattr(config, name, "")
         check(f"config.{name} is non-empty", bool(value), repr(value))
 
 
 def check_application_modules() -> None:
-    for module_name in ["auth", "storage", "usage"]:
+    for module_name in ["auth", "storage", "usage", "corpus", "retrieval"]:
         try:
             __import__(module_name)
             check(f"{module_name}.py imports", True)
@@ -154,6 +156,15 @@ def check_agent_contract() -> None:
         "all tool schemas use strict mode",
         all(schema.get("strict") is True for schema in AGENT_TOOLS),
     )
+
+    from config import CORPUS_PATH
+    from corpus import load_rubrics
+
+    try:
+        rubrics = load_rubrics(CORPUS_PATH)
+        check("curated RAG corpus is present", bool(rubrics), str(len(rubrics)))
+    except ValueError as exc:
+        check("curated RAG corpus is present", False, str(exc))
 
 
 def load_local_secrets(*, required: bool = True) -> dict[str, object]:
@@ -305,6 +316,7 @@ def check_deployment_files() -> None:
         check("Docker binds Streamlit to all interfaces", "0.0.0.0" in text)
         check("Docker runs as a non-root user", "USER appuser" in text)
         check("Docker limits uploaded files", "--server.maxUploadSize=4" in text)
+        check("Docker includes the curated RAG corpus", "COPY --chown=appuser:appuser data ./data" in text)
 
     vercel_path = CHAPTER_ROOT / "vercel.json"
     if not vercel_path.exists():

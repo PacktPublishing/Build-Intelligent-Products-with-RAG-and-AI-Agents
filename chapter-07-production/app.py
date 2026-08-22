@@ -16,15 +16,17 @@ from auth import (
     sign_out,
     sign_up,
 )
-from config import MAX_INTENT_CHARS, MAX_PAGES
+from config import CORPUS_PATH, MAX_INTENT_CHARS, MAX_PAGES
+from corpus import load_rubrics
 from ingest import IngestError, extract_resume_text
 from roast import (
     RoastError,
     create_client,
     is_resume,
     parse_score,
-    run_agentic_roast,
+    roast_resume,
 )
+from retrieval import RetrievalError, build_index
 from storage import StorageError, get_roasts, save_roast
 from usage import UsageError, consume_daily_request
 
@@ -69,6 +71,16 @@ def _supabase_client():
     return st.session_state["_supabase_client"]
 
 
+@st.cache_data
+def _rubrics():
+    return load_rubrics(CORPUS_PATH)
+
+
+@st.cache_resource
+def _rubric_index(api_key: str):
+    return build_index(create_client(api_key), _rubrics())
+
+
 def _remember_user(user) -> None:
     """Store only the identity fields needed by the interface."""
 
@@ -99,6 +111,12 @@ try:
     supabase = _supabase_client()
 except AuthError as exc:
     st.error(f"Supabase configuration error: {exc}")
+    st.stop()
+
+try:
+    rubric_index = _rubric_index(_get_setting("OPENAI_API_KEY"))
+except (RetrievalError, ValueError) as exc:
+    st.error(str(exc))
     st.stop()
 
 
@@ -288,20 +306,23 @@ if roast_submitted:
                     )
                     st.stop()
 
-            with st.spinner(
-                "Analyzing your target and roasting your resume..."
-            ):
-                result = run_agentic_roast(
+            with st.spinner("Retrieving role evidence and analyzing your target..."):
+                result = roast_resume(
                     openai_client,
                     resume_text,
                     intent_clean,
+                    rubric_index,
                 )
 
-            if result.startswith("SCORE:"):
-                score = parse_score(result)
+            if result.text.startswith("SCORE:"):
+                score = parse_score(result.text)
 
                 # Always show the generated result, even if storage is unavailable.
-                st.markdown(result)
+                st.markdown(result.text)
+                evidence_ids = ", ".join(match.chunk.chunk_id for match in result.evidence)
+                st.caption(f"Grounded in curated rubric chunks: {evidence_ids}")
+                with st.expander("Agent trace"):
+                    st.json(result.trace)
 
                 try:
                     save_roast(
@@ -309,12 +330,12 @@ if roast_submitted:
                         user_id=authenticated_user["id"],
                         user_intent=intent_clean,
                         score=score,
-                        roast_text=result,
+                        roast_text=result.text,
                     )
                 except StorageError as exc:
                     st.warning(str(exc))
             else:
-                st.warning(result)
+                st.warning(result.text)
 
         except IngestError as exc:
             st.error(str(exc))

@@ -16,9 +16,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Run the container as an unprivileged user.
 RUN useradd --create-home --uid 10001 appuser
 
-# Only Python runtime files are copied. Secrets, tests, PDFs, and local
-# development files are excluded from the image.
+# Runtime modules and the inspected, curated RAG corpus are copied. Secrets,
+# tests, PDFs, and local development files remain outside the image.
 COPY --chown=appuser:appuser *.py ./
+COPY --chown=appuser:appuser data ./data
 
 USER appuser
 
