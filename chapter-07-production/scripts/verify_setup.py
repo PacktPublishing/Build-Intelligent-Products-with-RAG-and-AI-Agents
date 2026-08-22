@@ -252,20 +252,6 @@ def check_ignore_rules() -> None:
         ),
     )
 
-    dockerignore = CHAPTER_ROOT / ".dockerignore"
-    if not dockerignore.exists():
-        check(".dockerignore exists", False)
-        return
-
-    check(".dockerignore exists", True)
-    docker_patterns = {
-        line.strip()
-        for line in dockerignore.read_text(encoding="utf-8").splitlines()
-    }
-    check(
-        "Streamlit secrets are excluded from Docker",
-        ".streamlit/" in docker_patterns,
-    )
 
 
 def check_secret_leaks(values: dict[str, object]) -> None:
@@ -288,7 +274,7 @@ def check_secret_leaks(values: dict[str, object]) -> None:
             continue
         if relative.as_posix() == ".streamlit/secrets.toml":
             continue
-        if path.name not in {"Dockerfile", ".dockerignore"} and path.suffix.lower() not in text_suffixes:
+        if path.suffix.lower() not in text_suffixes:
             continue
 
         try:
@@ -307,44 +293,13 @@ def check_secret_leaks(values: dict[str, object]) -> None:
 
 
 def check_deployment_files() -> None:
-    dockerfile = CHAPTER_ROOT / "Dockerfile"
-    if not dockerfile.exists():
-        check("Dockerfile exists", False)
-    else:
-        check("Dockerfile exists", True)
-        text = dockerfile.read_text(encoding="utf-8")
-        check("Docker listens on the Vercel PORT", "$PORT" in text)
-        check("Docker binds Streamlit to all interfaces", "0.0.0.0" in text)
-        check("Docker runs as a non-root user", "USER appuser" in text)
-        check("Docker limits uploaded files", "--server.maxUploadSize=4" in text)
-        check("Docker includes the curated RAG corpus", "COPY --chown=appuser:appuser data ./data" in text)
+    entrypoint = CHAPTER_ROOT / "app.py"
+    requirements = CHAPTER_ROOT / "requirements.txt"
+    corpus = CHAPTER_ROOT / "data" / "rubrics.json"
 
-    vercel_path = CHAPTER_ROOT / "vercel.json"
-    if not vercel_path.exists():
-        check("vercel.json exists", False)
-        return
-
-    check("vercel.json exists", True)
-    try:
-        configuration = json.loads(vercel_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        check("vercel.json is valid JSON", False, type(exc).__name__)
-        return
-
-    check("vercel.json is valid JSON", True)
-    service = configuration.get("services", {}).get("resumeroast", {})
-    check("Vercel service uses container runtime", service.get("runtime") == "container")
-    check("Vercel service points to Dockerfile", service.get("entrypoint") == "Dockerfile")
-
-    rewrites = configuration.get("rewrites", [])
-    routes_to_service = any(
-        rewrite.get("source") == "/(.*)"
-        and isinstance(rewrite.get("destination"), dict)
-        and rewrite["destination"].get("service") == "resumeroast"
-        for rewrite in rewrites
-        if isinstance(rewrite, dict)
-    )
-    check("Vercel routes all traffic to ResumeRoast", routes_to_service)
+    check("Streamlit Community Cloud entrypoint exists", entrypoint.exists())
+    check("requirements.txt sits beside the entrypoint", requirements.exists())
+    check("curated RAG corpus is included beside the entrypoint", corpus.exists())
 
 
 def check_live(values: dict[str, object]) -> None:

@@ -1,4 +1,4 @@
-# ResumeRoast v2 — agent-layer PRD
+# ResumeRoast v2: agent-layer PRD
 
 ## 1. One-liner
 
@@ -16,7 +16,7 @@ Active job seekers with a specific application or target company who want eviden
 
 ## 4. Core action
 
-The user uploads a resume and describes what they are applying for; a capped read-only agent gathers only the missing public context and returns a grounded 1–10 critique.
+The user uploads a resume and describes what they are applying for; a capped read-only agent gathers only the missing public context and returns a grounded 1 to 10 critique.
 
 ## 5. The five nodes
 

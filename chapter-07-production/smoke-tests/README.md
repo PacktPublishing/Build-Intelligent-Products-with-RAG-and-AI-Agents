@@ -21,7 +21,7 @@ Generic role strings should not call either tool. That is now part of the regres
 
 ## Agent trajectory cases
 
-The agent suite uses `duty-lister-resume.pdf` for every case and injects fixed tool observations so the route — not the public web — is under test.
+The agent suite uses `duty-lister-resume.pdf` for every case and injects fixed tool observations, so the route rather than the public web is under test.
 
 | Case | Expected action path |
 |---|---|

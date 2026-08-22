@@ -1,6 +1,6 @@
 # Chapter 7: Shipping It
 
-This directory turns the Chapter 5 RAG layer and Chapter 6 agent layer into a small, deployable ResumeRoast product. It adds Supabase authentication, Row Level Security, durable history, an atomic daily allowance, a Docker runtime, and GitHub Actions checks.
+This directory turns the Chapter 5 RAG layer and Chapter 6 agent layer into a small, deployable ResumeRoast product. It adds Supabase authentication, Row Level Security, durable history, an atomic daily allowance, a Streamlit Community Cloud deployment path, and GitHub Actions checks.
 
 This is a learning deployment for a small group of real users. It is not a claim that the product is ready for unlimited public traffic.
 
@@ -10,7 +10,7 @@ This is a learning deployment for a small group of real users. It is not a claim
 - An OpenAI API key for the supplied example
 - A Supabase project
 - A GitHub repository you control
-- A Vercel account for the hosted path
+- A Streamlit Community Cloud account for the hosted path
 
 The architecture is provider-neutral. The example uses OpenAI because the prior chapters use its SDK, while retrieval, authentication, and deployment boundaries do not depend on it.
 
@@ -87,15 +87,15 @@ git push
 
 GitHub Actions runs the repository-safe verifier and offline tests. It intentionally does not use a model-provider key or call live APIs.
 
-## 5. Deploy to Vercel
+## 5. Deploy to Streamlit Community Cloud
 
-Import your GitHub repository in Vercel. When prompted for a root directory, select:
+In Streamlit Community Cloud, choose **Create app** and select the repository and branch you just pushed. Use this entrypoint file:
 
 ```text
-chapter-07-production
+chapter-07-production/app.py
 ```
 
-The supplied `Dockerfile` and `vercel.json` define the container deployment. Add these three environment variables for the Production environment:
+Community Cloud runs the app from the repository root and finds the pinned `requirements.txt` next to `app.py`. In **Advanced settings**, paste the contents of your local `.streamlit/secrets.toml` file into the **Secrets** field. The required keys are:
 
 ```text
 OPENAI_API_KEY
@@ -103,10 +103,10 @@ SUPABASE_URL
 SUPABASE_KEY
 ```
 
-Deploy, wait for the deployment to report **Ready**, and open its generated HTTPS URL. Do this before adding a custom domain. A generated URL proves that the product works independently of DNS and branding.
+Deploy, wait for the app to start, and open its generated `streamlit.app` HTTPS URL. Do this before adding a custom domain. A generated URL proves that the product works independently of DNS and branding.
 
 ## 6. Smoke test the public URL
 
 Open the generated URL in a private browser window. Create a new disposable account, upload a synthetic resume, and generate one roast. Confirm that retrieved evidence appears with the result, sign out and back in to confirm history is durable, then use a second account to confirm the first account's history is not visible.
 
-If the build fails, first check that the Vercel root directory is `chapter-07-production`. If the app reports a missing setting, compare the exact environment-variable names above and redeploy. If sign-up succeeds without a session, revisit the Confirm Email choice described earlier.
+If the build fails, first check that the entrypoint is `chapter-07-production/app.py` and that `requirements.txt` is in the same directory. If the app reports a missing setting, compare the exact TOML key names above and update the app secrets. If sign-up succeeds without a session, revisit the Confirm Email choice described earlier.

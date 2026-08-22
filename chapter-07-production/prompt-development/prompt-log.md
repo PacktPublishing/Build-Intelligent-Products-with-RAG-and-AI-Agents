@@ -1,6 +1,6 @@
 # Prompt iteration log
 
-Record every prompt change here: what failed, what you changed, and what happened. Prompt edits interact — a fix for one fixture can quietly regress another — so this log is how you notice. It's also the seed of the prompt-versioning discipline Chapter 8 builds properly.
+Record every prompt change here: what failed, what you changed, and what happened. Prompt edits interact. A fix for one fixture can quietly regress another, so this log is how you notice. It's also the seed of the prompt-versioning discipline Chapter 8 builds properly.
 
 Each entry:
 
@@ -17,7 +17,7 @@ Each entry:
 
 ---
 
-## Illustrative entry 1 (template — not a real run)
+## Illustrative entry 1 (template, not a real run)
 
 ## Version
 placeholder → v1, draft 1
@@ -29,7 +29,7 @@ _fill in when you run this_
 `duty-lister-resume.pdf`
 
 ## Failure observed
-The placeholder prompt's critique was generic — "consider quantifying your achievements" — and never quoted the actual weak bullets, so it read the same as feedback for any other resume.
+The placeholder prompt's critique was generic: "consider quantifying your achievements". It never quoted the actual weak bullets, so it read the same as feedback for any other resume.
 
 ## Prompt change
 Added the grounding rule requiring every criticism to quote or directly reference specific resume text before critiquing it (the "quote, then critique" rule in `# GROUNDING RULES`).
@@ -45,7 +45,7 @@ _Re-run `strong-senior-resume.pdf` after this change to confirm it didn't start 
 
 ---
 
-## Illustrative entry 2 (template — not a real run)
+## Illustrative entry 2 (template, not a real run)
 
 ## Version
 v1 draft 1 → v1 draft 2

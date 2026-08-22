@@ -45,7 +45,8 @@ MIN_RETRIEVAL_SCORE = 0.35
 TOOL_TIMEOUT_SECONDS = 10
 MAX_TOOL_REDIRECTS = 3
 
-DATA_DIR = Path("data")
+CHAPTER_ROOT = Path(__file__).resolve().parent
+DATA_DIR = CHAPTER_ROOT / "data"
 CORPUS_PATH = DATA_DIR / "rubrics.json"
 
 PROMPT_VERSION = "v3-rag-agent-production"

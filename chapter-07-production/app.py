@@ -230,7 +230,7 @@ if history:
 
     for record in reversed(history):
         label = (
-            f"{record['user_intent']} — scored {record['score']}/10 "
+            f"{record['user_intent']}: scored {record['score']}/10 "
             f"on {record['created_at'][:10]}"
         )
 
@@ -238,7 +238,7 @@ if history:
             st.markdown(record["roast_text"])
 else:
     st.info(
-        "No roasts yet — upload your resume below to get your first one."
+        "No roasts yet. Upload your resume below to get your first one."
     )
 
 
@@ -294,7 +294,7 @@ if roast_submitted:
                 st.stop()
 
             st.caption(
-                f"Daily usage: {usage.used_count}/{usage.daily_limit} — "
+                f"Daily usage: {usage.used_count}/{usage.daily_limit}: "
                 f"{usage.remaining_count} remaining after this request."
             )
 
