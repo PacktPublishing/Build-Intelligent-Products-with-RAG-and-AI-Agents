@@ -132,4 +132,66 @@ revoke all on table public.daily_usage from authenticated;
 grant select, insert on table public.roasts to authenticated;
 grant select on table public.daily_usage to authenticated;
 
+-- ---------------------------------------------------------------------------
+-- Atomic daily allowance
+-- ---------------------------------------------------------------------------
+
+-- The caller may ask this function to reserve an allowance, but cannot write
+-- daily_usage directly. SECURITY DEFINER is deliberately narrow here: it is
+-- the only path that can update the ledger for an authenticated user.
+create or replace function public.consume_daily_request()
+returns table (
+    allowed boolean,
+    used_count integer,
+    daily_limit integer,
+    remaining_count integer
+)
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+    caller_id uuid := auth.uid();
+    current_usage_date date := (now() at time zone 'utc')::date;
+    configured_limit constant integer := 3;
+    resulting_count integer;
+begin
+    if caller_id is null then
+        raise exception 'authentication is required';
+    end if;
+
+    insert into public.daily_usage (user_id, usage_date, request_count)
+    values (caller_id, current_usage_date, 1)
+    on conflict (user_id, usage_date) do update
+    set request_count = public.daily_usage.request_count + 1,
+        updated_at = now()
+    where public.daily_usage.request_count < configured_limit
+    returning request_count into resulting_count;
+
+    if found then
+        return query select
+            true,
+            resulting_count,
+            configured_limit,
+            configured_limit - resulting_count;
+        return;
+    end if;
+
+    select request_count
+    into resulting_count
+    from public.daily_usage
+    where user_id = caller_id and usage_date = current_usage_date;
+
+    return query select
+        false,
+        coalesce(resulting_count, configured_limit),
+        configured_limit,
+        0;
+end;
+$$;
+
+revoke all on function public.consume_daily_request() from public;
+revoke all on function public.consume_daily_request() from anon;
+grant execute on function public.consume_daily_request() to authenticated;
+
 commit;
