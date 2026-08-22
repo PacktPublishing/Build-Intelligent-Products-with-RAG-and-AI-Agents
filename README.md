@@ -8,8 +8,10 @@ This is the official companion code repository for *Build Intelligent Products w
 |---|---|---|---|
 | Chapter 4 | ResumeRoast v1 | LLM wrapper, Streamlit, PDF ingestion, CSV storage | [chapter-04-mvp](chapter-04-mvp/) |
 | Chapter 5 | ResumeRoast v2 | Capped agent loop and read-only job-context tools | [chapter-05-agents](chapter-05-agents/) |
-| Chapter 6 | ResumeRoast v3 | Production infrastructure | Coming later |
-| Chapter 7 | ResumeRoast v4 | First-user and distribution support | Coming later |
+| Chapter 5 | ResumeRoast v3 | Grounding with RAG | `chapter-05-rag` |
+| Chapter 6 | ResumeRoast v4 | Adding the agent layer | `chapter-06-agents` |
+| Chapter 7 | ResumeRoast v5 | Production infrastructure | `chapter-07-production` |
+| Chapter 8 | ResumeRoast v6 | First-user and distribution support | Coming later |
 | Chapter 8 | ResumeRoast v5 | Evaluation and iteration | Coming later |
 | Chapter 9 | ResumeRoast v6 | Scaling into a real product | Coming later |
 

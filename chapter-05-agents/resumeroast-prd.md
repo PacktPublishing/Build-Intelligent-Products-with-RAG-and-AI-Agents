@@ -28,7 +28,7 @@ The user uploads a resume and describes what they are applying for; a capped rea
 
 ## 6. Stack commitment
 
-Plain Python and Streamlit remain. OpenAI is called directly through the Responses API. The agent has exactly two read-only tools and at most three model steps. CSV remains until Chapter 6. No vector layer is added because the gap is a live action, not a private knowledge corpus.
+Plain Python and Streamlit remain. OpenAI is called directly through the Responses API. The agent has exactly two read-only tools and at most three model steps. CSV remains until Chapter 7. No vector layer is added because the gap is a live action, not a private knowledge corpus.
 
 ## 7. Out of scope
 

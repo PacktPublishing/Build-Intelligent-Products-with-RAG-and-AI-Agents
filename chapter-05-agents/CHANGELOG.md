@@ -42,4 +42,4 @@
 - Browser automation for job boards that expose neither readable nor supported structured data
 - Write-capable tools and human approval flows
 - RAG/vector storage
-- Durable database, real authentication, monitoring, rate limiting, and production cost controls (Chapter 6)
+- Durable database, real authentication, monitoring, rate limiting, and production cost controls (Chapter 7)

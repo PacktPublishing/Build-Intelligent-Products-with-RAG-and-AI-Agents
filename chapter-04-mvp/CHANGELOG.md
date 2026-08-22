@@ -22,7 +22,7 @@
 
 - Job-posting URL / agent layer (Chapter 5)
 - RAG / vector database (only if a role-rubric corpus outgrows the prompt)
-- Supabase as the durable database (Chapter 6, per the stack commitment's graduation trigger)
-- Real authentication (Chapter 6)
-- Production hardening: monitoring, rate limits, CI/CD (Chapter 6)
+- Supabase as the durable database (Chapter 7, per the stack commitment's graduation trigger)
+- Real authentication (Chapter 7)
+- Production hardening: monitoring, rate limits, CI/CD (Chapter 7)
 - Evaluation and analytics (Chapter 8)

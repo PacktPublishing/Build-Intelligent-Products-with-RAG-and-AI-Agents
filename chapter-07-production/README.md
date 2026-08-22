@@ -226,7 +226,7 @@ The secret should appear as ignored, never staged. The final command should prin
 - Company search uses DuckDuckGo's HTML results page to avoid adding a second API key. It may be rate-limited or change markup; failure becomes a tool observation.
 - Search snippets are public context, not authoritative company policy.
 - Tool routing and final prose remain probabilistic; run the trajectory suite after every prompt or model change.
-- CSV concurrency, ephemeral Streamlit storage, email-only identification, monitoring, rate limits, and durable infrastructure remain Chapter 6 work.
+- CSV concurrency, ephemeral Streamlit storage, email-only identification, monitoring, rate limits, and durable infrastructure are Chapter 7 work.
 - There is still no RAG/vector database because this feature has an action gap, not a private-corpus retrieval gap.
 
 ## Done when

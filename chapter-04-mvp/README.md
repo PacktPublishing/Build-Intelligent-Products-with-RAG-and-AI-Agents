@@ -26,7 +26,7 @@ The scope contract for this version is [resumeroast-prd.md](resumeroast-prd.md) 
 - **No RAG.** Everything the roast needs (the resume, the role, the model's trained judgment) fits in a single prompt — there's no corpus to retrieve from yet.
 - **No vector database.** Same reason: nothing here needs to be *found*, only sent.
 - **No agent.** The product only generates text; it doesn't take actions like fetching a job posting (that's Chapter 5).
-- **No production database.** Two CSV files are the entire data layer until real users make that untenable (Chapter 6).
+- **No production database.** Two CSV files are the entire data layer until real users make that untenable (Chapter 7).
 - **No real authentication.** Email capture identifies a user across visits; it is not a password and isn't described as one.
 - **No OCR.** Scanned/image-only PDFs get a clear refusal message instead of a hallucinated critique.
 
@@ -161,7 +161,7 @@ Confirm no `.venv`, no `data/*.csv`, and no `secrets.toml` are staged. If the la
 - Model names and prices change on the provider's schedule, not this book's.
 - `ROAST_MODEL` defaults to a reasoning model, which spends part of its output budget on hidden reasoning before writing the critique. If you swap in a different model, check `config.py`'s comment on `ROAST_REASONING_EFFORT` — reasoning models need it set, non-reasoning models need it set to `None`.
 - No rate limiting.
-- No durable database (the stack commitment's graduation trigger is Supabase, once strangers are using the live URL regularly — that's Chapter 6's work).
+- No durable database (the stack commitment's graduation trigger is Supabase, once strangers are using the live URL regularly, that's Chapter 7's work).
 - No production monitoring.
 
 ## Done when

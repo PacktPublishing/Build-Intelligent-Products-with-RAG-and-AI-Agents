@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify that the Chapter 6 project is safe and ready to deploy.
+"""Verify that the Chapter 7 project is safe and ready to deploy.
 
 The default checks are local and make no network calls. Pass --live to
 make one minimal billed OpenAI request after all local checks pass.

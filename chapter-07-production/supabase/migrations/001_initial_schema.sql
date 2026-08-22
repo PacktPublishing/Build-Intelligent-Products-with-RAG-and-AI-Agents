@@ -1,4 +1,4 @@
--- ResumeRoast Chapter 6
+-- ResumeRoast Chapter 7
 -- Initial production database schema
 --
 -- Stores completed roast history and daily usage counters.

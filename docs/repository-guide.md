@@ -14,7 +14,7 @@ Readers enter this repository at different points — some read straight through
 
 ## Why later chapters don't overwrite earlier code
 
-`chapter-04-mvp` should still run, unmodified, after `chapter-06-production` exists. If Chapter 6 changes storage.py's internals, that change lives in `chapter-06-production/storage.py`, not by editing the Chapter 4 copy in place. This is more duplication than a single evolving codebase would have, and that's an intentional trade: a reader on Chapter 4 should never see Chapter 6's database code by accident.
+`chapter-04-mvp` should still run, unmodified, after `chapter-07-production` exists. If Chapter 7 changes storage.py's internals, that change lives in `chapter-07-production/storage.py`, not by editing the Chapter 4 copy in place. This is more duplication than a single evolving codebase would have, and that's an intentional trade: a reader on Chapter 4 should never see Chapter 7's database code by accident.
 
 ## What belongs in `shared/`
 
