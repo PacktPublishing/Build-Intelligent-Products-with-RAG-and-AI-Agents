@@ -5,7 +5,7 @@
 # surface can change between releases).
 streamlit==1.60.0
 openai==2.48.0
-pypdf==6.14.2
+pypdf==6.16.1
 requests==2.32.5
 beautifulsoup4==4.14.3
 supabase==2.31.0
